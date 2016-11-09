@@ -41,21 +41,27 @@ class TestListener extends Listener {
     //
   }
 
-  loop(api, raw) {
-    //
+  loop(api, close) {
+    close();
   }
 
-  catch(api, error) {
-    //
-  }
-
-  close(api) {
+  catch(error) {
     //
   }
 }
 
-// Testing purposes
-// Fluent variant
 Asip.listen(new TestListener);
 
-Asip.close();
+
+
+
+
+Asip.listen((api) => {
+
+  })
+  .loop((api, close) => {
+
+  })
+  .catch((error) => {
+
+  });

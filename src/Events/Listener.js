@@ -12,7 +12,6 @@ export default class Listener extends AbstractClass {
     this.require('open')
       .require('loop')
       .require('catch')
-      .require('close')
       .shouldNotBeInstantiated('Listener');
   }
 }

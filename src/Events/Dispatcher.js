@@ -107,9 +107,25 @@ export default class Dispatcher {
       callback = this.listener[this.events[event]];
     }
 
+    return this.callByEvent(event, callback, raw);
+  }
+
+
+  /**
+   * Resolves the callback by given event.
+   *
+   * @param {string} event  Name of the event to be fired
+   * @param {callable|null} callback  Action to be performed afterwards
+   * @param {string} raw  Raw data
+   */
+  callByEvent(event, callback, raw) {
+    if (event === 'error') {
+      return callback(raw);
+    }
+
     return callback({
       in: Input.feed(processed),
       out: Output.feed(processed),
-    }, raw);
+    }, this.port.close, raw);
   }
 }

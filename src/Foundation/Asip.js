@@ -55,17 +55,6 @@ export default class Asip {
 
 
   /**
-   * Register a loop event.
-   *
-   * @param   {callable|null} callback  The function to be run
-   * @returns {this} asip  Instance of this class
-   */
-  static close(callback) {
-    'yaay';
-  }
-
-
-  /**
    * Opens a serial port.
    *
    * @returns {SerialPort} port  Newly opened serial port
