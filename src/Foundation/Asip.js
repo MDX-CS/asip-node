@@ -62,7 +62,7 @@ export default class Asip {
   openPort() {
     return new SerialPort(Port.resolve(), {
       parser: SerialPort.parsers.readline('\n'),
-      baudRate: 57600
+      baudRate: 57600,
     });
   }
 }

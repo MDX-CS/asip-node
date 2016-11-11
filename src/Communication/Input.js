@@ -1,21 +1,15 @@
-export default class Input {
-  /**
-   * Class constructor.
-   *
-   * @returns {void}
-   */
-  constructor(data) {
-    this.data = data;
-  }
+import Communication from './Communication';
 
-
+export default class Input extends Communication {
   /**
    * Feeds the data to the input class.
    *
+   * @param   {Object} data  Parsed data
+   * @param   {Builder} builder  The respobse builder
    * @returns {this} input  Instance of this class
    */
-  static feed(data) {
-    return new Input(data);
+  static feed(data, builder) {
+    return new Input(data, builder);
   }
 
 
@@ -26,6 +20,6 @@ export default class Input {
    * @returns {bool} on  Whether the pin is on
    */
   on(pin) {
-    console.log(`the ${pin} pin is on/off`);
+    console.log(pin);
   }
 }

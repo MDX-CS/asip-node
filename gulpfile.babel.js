@@ -25,8 +25,8 @@ gulp.task('watch', ['lint', 'test'], () => {
 });
 
 gulp.task('lint', () => {
-    // return gulp.src(['src/**/*.js'])
-    //     .pipe(eslint())
-    //     .pipe(eslint.format())
-    //     .pipe(eslint.failAfterError());
+    return gulp.src(['src/**/*.js'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
 })

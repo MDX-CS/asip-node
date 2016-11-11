@@ -1,5 +1,6 @@
-import Parser from '../Parser/Parser';
 import Listener from './Listener';
+import Parser from '../Parsing/Parser';
+import Builder from '../Parsing/Builder';
 import Input from '../Communication/Input';
 import Output from '../Communication/Output';
 
@@ -9,7 +10,6 @@ export default class Dispatcher {
    *
    * @param   {SerialPort} port  The port that the dispatcher is working on
    * @param   {callable|Listener} callback  The action/s to be performed
-   * @returns {void}
    */
   constructor(port, callback) {
     this.port = port;
@@ -19,7 +19,7 @@ export default class Dispatcher {
       data: 'loop',
       error: 'catch',
       close: 'close',
-    }
+    };
 
     if (callback instanceof Listener) {
       this.listener = callback;
@@ -50,6 +50,7 @@ export default class Dispatcher {
    * Fires the event.
    *
    * @param {callable|null} callback  Action to be performed afterwards
+   * @returns {void}
    */
   catch(callback) {
     this.fire('error', callback);
@@ -60,6 +61,7 @@ export default class Dispatcher {
    * Fires the event.
    *
    * @param {callable|null} callback  Action to be performed afterwards
+   * @returns {void}
    */
   open(callback) {
     this.fire('open', callback);
@@ -70,6 +72,7 @@ export default class Dispatcher {
    * Fires the event.
    *
    * @param {callable|null} callback  Action to be performed afterwards
+   * @returns {void}
    */
   loop(callback) {
     this.fire('data', callback);
@@ -81,6 +84,7 @@ export default class Dispatcher {
    *
    * @param {string} event  Name of the event to be fired
    * @param {callable|null} callback  Action to be performed afterwards
+   * @returns {void}
    */
   fire(event, callback) {
     this.port.on(event, raw =>
@@ -95,16 +99,15 @@ export default class Dispatcher {
    * @param {string} event  Name of the event to be fired
    * @param {callable|null} callback  Action to be performed afterwards
    * @param {string} raw  Raw data
+   * @returns {mixed} response  The callback response
    */
   resolveCallback(event, callback, raw) {
-    const processed = Parser.process(raw);
-
     if (callback === undefined && this.listener === undefined) {
-      return;
+      return null;
     }
 
     if (this.listener instanceof Listener) {
-      callback = this.listener[this.events[event]];
+      return this.callByEvent(event, this.listener[this.events[event]], raw);
     }
 
     return this.callByEvent(event, callback, raw);
@@ -117,15 +120,18 @@ export default class Dispatcher {
    * @param {string} event  Name of the event to be fired
    * @param {callable|null} callback  Action to be performed afterwards
    * @param {string} raw  Raw data
+   * @returns {mixed} response  The callback response
    */
   callByEvent(event, callback, raw) {
+    const processed = Parser.process(raw);
+
     if (event === 'error') {
       return callback(raw);
     }
 
     return callback({
-      in: Input.feed(processed),
-      out: Output.feed(processed),
+      in: Input.feed(processed, new Builder(this.port)),
+      out: Output.feed(processed, new Builder(this.port)),
     }, this.port.close, raw);
   }
 }

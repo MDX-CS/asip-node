@@ -1,21 +1,15 @@
-export default class Output {
-  /**
-   * Class constructor.
-   *
-   * @returns {void}
-   */
-  constructor(data) {
-    this.data = data;
-  }
+import Communication from './Communication';
 
-
+export default class Output extends Communication {
   /**
    * Feeds the data to the output class.
    *
+   * @param   {Object} data  Parsed data
+   * @param   {Builder} builder  The respobse builder
    * @returns {this} output  Instance of this class
    */
-  static feed(data) {
-    return new Output(data);
+  static feed(data, builder) {
+    return new Output(data, builder);
   }
 
 
@@ -26,6 +20,17 @@ export default class Output {
    * @returns {void}
    */
   on(pin) {
-    console.log(`turning on the ${pin} pin`);
+    this.builder.on(pin);
+  }
+
+
+  /**
+   * Sets the output mode fot the pin.
+   *
+   * @param   {int} pin  The number of the pin
+   * @returns {void}
+   */
+  pin(pin) {
+    this.builder.pin(pin);
   }
 }
